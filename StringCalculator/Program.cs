@@ -1,9 +1,8 @@
 ﻿using System;
-using StringCalculator;
 
-namespace StringCalculatorApp
+namespace StringCalculator
 {
-    class Program
+    public class Program
     {
         public static void Main(string[] args)
         {
