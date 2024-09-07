@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace StringCalculator
 {
@@ -14,13 +15,24 @@ namespace StringCalculator
             string delimiter = ",";
             string numberStr = input;
 
-            // Check if the input starts with the custom delimiter format
+            // Check for custom delimiter
             if (input.StartsWith("//"))
             {
                 int delimiterEndIndex = input.IndexOf('\n');
                 if (delimiterEndIndex != -1)
                 {
-                    delimiter = input.Substring(2, delimiterEndIndex - 2); // Get the custom delimiter
+                    string delimiterPart = input.Substring(2, delimiterEndIndex - 2); // Get the custom delimiter part
+
+                    // Check if the delimiter is enclosed in brackets (custom delimiter of any length)
+                    if (delimiterPart.StartsWith("[") && delimiterPart.EndsWith("]"))
+                    {
+                        delimiter = delimiterPart.Substring(1, delimiterPart.Length - 2); // Extract the delimiter between brackets
+                    }
+                    else
+                    {
+                        delimiter = delimiterPart; // Single character delimiter
+                    }
+
                     numberStr = input.Substring(delimiterEndIndex + 1); // Get the numbers part
                 }
             }
@@ -30,11 +42,11 @@ namespace StringCalculator
             // Replace newline characters with the custom delimiter
             numberStr = numberStr.Replace("\n", delimiter);
 
-            var numbers = numberStr.Split(delimiter);
+            var numberArr = numberStr.Split(new string[] { delimiter }, StringSplitOptions.None);
 
             int sum = 0;
 
-            foreach (var number in numbers)
+            foreach (var number in numberArr)
             {
                 if (int.TryParse(number, out int result))
                 {

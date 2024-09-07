@@ -152,6 +152,21 @@ namespace StringCalculator.Tests
             var result = _calculator.Add(input);
             Assert.Equal(102, result); // ff is ignored
         }
-        
+
+        [Fact]
+        public void Add_CustomDelimiterOfAnyLength_ReturnsSum()
+        {
+            var input = "//[***]\n11***22***33";
+            var result = _calculator.Add(input);
+            Assert.Equal(66, result); // Custom delimiter is ***
+        }
+
+        [Fact]
+        public void Add_CustomDelimiterOfAnyLengthWithInvalidValues_ReturnsSumIgnoringInvalid()
+        {
+            var input = "//[***]\n11***invalid***33";
+            var result = _calculator.Add(input);
+            Assert.Equal(44, result); // 'invalid' is treated as 0
+        }
     }
 }
