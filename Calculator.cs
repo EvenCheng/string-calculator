@@ -11,13 +11,26 @@ namespace StringCalculator
             if (string.IsNullOrWhiteSpace(input))
                 return 0;
 
-            // Replace newline characters with commas to standardize the delimiter
-            input = input.Replace("\n", ",");
+            string delimiter = ",";
+            string numberStr = input;
 
-            var numbers = input.Split(',');
+            // Check if the input starts with the custom delimiter format
+            if (input.StartsWith("//"))
+            {
+                int delimiterEndIndex = input.IndexOf('\n');
+                if (delimiterEndIndex != -1)
+                {
+                    delimiter = input.Substring(2, delimiterEndIndex - 2); // Get the custom delimiter
+                    numberStr = input.Substring(delimiterEndIndex + 1); // Get the numbers part
+                }
+            }
 
             // List to store any negative numbers found
             List<int> negativeNumbers = new List<int>();
+            // Replace newline characters with the custom delimiter
+            numberStr = numberStr.Replace("\n", delimiter);
+
+            var numbers = numberStr.Split(delimiter);
 
             int sum = 0;
 

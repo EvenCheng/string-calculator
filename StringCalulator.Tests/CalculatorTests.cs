@@ -120,5 +120,38 @@ namespace StringCalculator.Tests
             var result = _calculator.Add(input);
             Assert.Equal(0, result);
         }
+
+        [Fact]
+        public void Add_CustomDelimiter_ReturnsSum()
+        {
+            var input = "//#\n2#5";
+            var result = _calculator.Add(input);
+            Assert.Equal(7, result); // Custom delimiter is #
+        }
+
+        [Fact]
+        public void Add_CustomDelimiterWithMultipleValues_ReturnsSum()
+        {
+            var input = "//;\n2;5;100";
+            var result = _calculator.Add(input);
+            Assert.Equal(107, result); // Custom delimiter is ;
+        }
+
+        [Fact]
+        public void Add_CustomDelimiterWithLargeValues_ReturnsSumIgnoringLargeValues()
+        {
+            var input = "//;\n2;1001;6";
+            var result = _calculator.Add(input);
+            Assert.Equal(8, result); // 1001 is ignored
+        }
+
+        [Fact]
+        public void Add_CustomDelimiterInvalidNumber_ReturnsSumIgnoringInvalidNumber()
+        {
+            var input = "//,\n2,ff,100";
+            var result = _calculator.Add(input);
+            Assert.Equal(102, result); // ff is ignored
+        }
+        
     }
 }
