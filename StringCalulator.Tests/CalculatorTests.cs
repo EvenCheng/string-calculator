@@ -116,5 +116,31 @@ namespace StringCalculator.Tests
             // Assert
             Assert.Equal(0, result);
         }
+
+        [Fact]
+        public void Add_NewlineAsDelimiter_ReturnsSum()
+        {
+            // Arrange
+            var input = "1\n2,3";
+
+            // Act
+            var result = _calculator.Add(input);
+
+            // Assert
+            Assert.Equal(6, result);
+        }
+
+        [Fact]
+        public void Add_MultipleNewlineAndCommaDelimiters_ReturnsSum()
+        {
+            // Arrange
+            var input = "1\n2\n3\n4,\n5";
+
+            // Act
+            var result = _calculator.Add(input);
+
+            // Assert
+            Assert.Equal(15, result);
+        }
     }
 }

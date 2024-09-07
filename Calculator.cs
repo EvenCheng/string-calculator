@@ -9,6 +9,9 @@ namespace StringCalculator
             if (string.IsNullOrWhiteSpace(input))
                 return 0;
 
+            // Replace newline characters with commas to standardize the delimiter
+            input = input.Replace("\n", ",");
+
             var numbers = input.Split(',');
 
             int sum = 0;
