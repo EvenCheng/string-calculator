@@ -7,14 +7,23 @@ namespace StringCalculator
 {
     public class Calculator
     {
-        // Public method to parse the input and return the result and formula
+        private readonly List<string> _delimiters;
+        private readonly bool _denyNegativeNumbers;
+        private readonly int _upperBound;
+
+        public Calculator(List<string> delimiters = null, bool denyNegativeNumbers = true, int upperBound = 1000)
+        {
+            _delimiters = delimiters ?? new List<string> { ",", "\n" }; // Default delimiters
+            _denyNegativeNumbers = denyNegativeNumbers;
+            _upperBound = upperBound;
+        }
+
         public CalculationResult Add(string input)
         {
             if (string.IsNullOrWhiteSpace(input))
                 return new CalculationResult(0, "0");
 
             string numberStr = input;
-            List<string> delimiters = new List<string> { ",", "\n" }; // Default delimiters
 
             // Check for custom delimiter
             if (input.StartsWith("//"))
@@ -29,14 +38,16 @@ namespace StringCalculator
                     {
                         // Match all delimiters enclosed in brackets
                         var matches = Regex.Matches(delimiterPart, @"\[(.*?)\]");
+                        _delimiters.Clear();
                         foreach (Match match in matches)
                         {
-                            delimiters.Add(match.Groups[1].Value); // Add each custom delimiter to the list
+                            _delimiters.Add(match.Groups[1].Value); // Add each custom delimiter to the list
                         }
                     }
                     else
                     {
-                        delimiters.Add(delimiterPart); // Single character delimiter
+                        _delimiters.Clear();
+                        _delimiters.Add(delimiterPart); // Single character delimiter
                     }
 
                     numberStr = input.Substring(delimiterEndIndex + 1); // Get the numbers part
@@ -47,7 +58,7 @@ namespace StringCalculator
             List<int> negativeNumbers = new List<int>();
 
             // Split the input by any of the delimiters
-            var numberArr = numberStr.Split(delimiters.ToArray(), StringSplitOptions.None);
+            var numberArr = numberStr.Split(_delimiters.ToArray(), StringSplitOptions.None);
 
             int sum = 0;
             List<string> formulaParts = new List<string>(); // Store each part of the formula
@@ -56,12 +67,12 @@ namespace StringCalculator
             {
                 if (int.TryParse(number, out int result))
                 {
-                    if (result < 0)
+                    if (_denyNegativeNumbers && result < 0)
                     {
                         // Add negative number to the list
                         negativeNumbers.Add(result);
                     }
-                    else if (result <= 1000)
+                    else if (result <= _upperBound)
                     {
                         // Add valid number to sum and formula
                         sum += result;
@@ -69,7 +80,7 @@ namespace StringCalculator
                     }
                     else
                     {
-                        // Add 0 for ignored values greater than 1000
+                        // Add 0 for ignored values greater than upper bound
                         formulaParts.Add("0");
                     }
                 }
@@ -80,8 +91,8 @@ namespace StringCalculator
                 }
             }
 
-            // If there are negative numbers, throw an exception
-            if (negativeNumbers.Any())
+            // If there are negative numbers and denial is enabled, throw an exception
+            if (_denyNegativeNumbers && negativeNumbers.Any())
             {
                 throw new ArgumentException($"Negatives not allowed: {string.Join(", ", negativeNumbers)}");
             }

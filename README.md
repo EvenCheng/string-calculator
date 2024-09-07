@@ -9,15 +9,23 @@ dotnet build
 
 ## Run the Application (Console Input)
 ```
-dotnet run --project StringCalculator
+dotnet run --project StringCalculator [--delimiter='xxx'][--negatives-ok][--upper-bound=OOO]
 ```
 Use Ctrl-C to exit the application
 
-##### Example
+##### Example 1
 ```
 Enter numbers to add. Press Ctrl+C to exit.
 Input: 2,7,10001,55,##,7
 2+7+0+55+0+7 = 71
+```
+
+##### Example 2
+```
+dotnet run --project StringCalculator --delimiter='[*][!!][r9r]' --negatives-ok --upper-bound=2000
+Enter numbers to add. Press Ctrl+C to exit.
+Input: 11r9r22*hh*33!!44*2001!!-500
+Result: 11+22+0+33+44+0+-500 = -390
 ```
 
 
