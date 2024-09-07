@@ -32,9 +32,9 @@ namespace StringCalculator.Tests
         [Fact]
         public void Add_TwoNumbers_ReturnsTheirSum()
         {
-            var input = "1,5000";
+            var input = "1,1000";
             var result = _calculator.Add(input);
-            Assert.Equal(5001, result);
+            Assert.Equal(1001, result);
         }
 
         [Fact]
@@ -63,6 +63,22 @@ namespace StringCalculator.Tests
             var input = "1,2,3,4,5,6,7,8,9,10,11,12";
             var result = _calculator.Add(input);
             Assert.Equal(78, result);
+        }
+
+        [Fact]
+        public void Add_NumberGreaterThan1000_IgnoredInSum()
+        {
+            var input = "2,1001,6";
+            var result = _calculator.Add(input);
+            Assert.Equal(8, result); // 1001 is ignored
+        }
+
+        [Fact]
+        public void Add_MultipleNumbersWithValuesOver1000_ReturnsSumIgnoringLargeValues()
+        {
+            var input = "1,1002,1003,4,5000,10";
+            var result = _calculator.Add(input);
+            Assert.Equal(15, result); // Only 1, 4, and 10 are summed
         }
 
         [Fact]

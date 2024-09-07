@@ -6,6 +6,8 @@
     <RootNamespace>string_calculator</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+
+    <NoWarn>CS7022</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

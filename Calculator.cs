@@ -30,8 +30,9 @@ namespace StringCalculator
                         // Add negative number to the list
                         negativeNumbers.Add(result);
                     }
-                    else
+                    else if (result <= 1000)
                     {
+                        // Only add numbers that are 1000 or less
                         sum += result;
                     }
                 }
