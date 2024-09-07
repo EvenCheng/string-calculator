@@ -11,9 +11,6 @@ namespace StringCalculator
 
             var numbers = input.Split(',');
 
-            if (numbers.Length > 2)
-                throw new ArgumentException("A maximum of two numbers is allowed.");
-
             int sum = 0;
 
             foreach (var number in numbers)

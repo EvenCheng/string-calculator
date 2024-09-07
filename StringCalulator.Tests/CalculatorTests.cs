@@ -66,13 +66,16 @@ namespace StringCalculator.Tests
         }
 
         [Fact]
-        public void Add_MoreThanTwoNumbers_ThrowsException()
+        public void Add_MultipleNumbers_ReturnsTheirSum()
         {
             // Arrange
-            var input = "1,2,3";
+            var input = "1,2,3,4,5,6,7,8,9,10,11,12";
 
-            // Act & Assert
-            Assert.Throws<ArgumentException>(() => _calculator.Add(input));
+            // Act
+            var result = _calculator.Add(input);
+
+            // Assert
+            Assert.Equal(78, result);
         }
 
         [Fact]
@@ -99,6 +102,19 @@ namespace StringCalculator.Tests
 
             // Assert
             Assert.Equal(4, result);
+        }
+
+        [Fact]
+        public void Add_AllInvalidNumbers_ReturnsZero()
+        {
+            // Arrange
+            var input = "abc,xyz";
+
+            // Act
+            var result = _calculator.Add(input);
+
+            // Assert
+            Assert.Equal(0, result);
         }
     }
 }
