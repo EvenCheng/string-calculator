@@ -168,5 +168,21 @@ namespace StringCalculator.Tests
             var result = _calculator.Add(input);
             Assert.Equal(44, result); // 'invalid' is treated as 0
         }
+
+        [Fact]
+        public void Add_MultipleCustomDelimiters_ReturnsSum()
+        {
+            var input = "//[*][!!][r9r]\n11r9r22*33!!44";
+            var result = _calculator.Add(input);
+            Assert.Equal(110, result); // Delimiters are *, !!, and r9r
+        }
+
+        [Fact]
+        public void Add_MultipleCustomDelimitersWithInvalidNumbers_ReturnsSumIgnoringInvalid()
+        {
+            var input = "//[*][!!][r9r]\n11r9r22*invalid!!44**1001";
+            var result = _calculator.Add(input);
+            Assert.Equal(77, result); // 'invalid' is treated as 0
+        }
     }
 }

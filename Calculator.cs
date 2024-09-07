@@ -12,7 +12,7 @@ namespace StringCalculator
             if (string.IsNullOrWhiteSpace(input))
                 return 0;
 
-            string delimiter = ",";
+            List<string> delimiters = new List<string> { ",", "\n" }; // Default delimiters
             string numberStr = input;
 
             // Check for custom delimiter
@@ -26,11 +26,16 @@ namespace StringCalculator
                     // Check if the delimiter is enclosed in brackets (custom delimiter of any length)
                     if (delimiterPart.StartsWith("[") && delimiterPart.EndsWith("]"))
                     {
-                        delimiter = delimiterPart.Substring(1, delimiterPart.Length - 2); // Extract the delimiter between brackets
+                        // Match all delimiters enclosed in brackets
+                        var matches = Regex.Matches(delimiterPart, @"\[(.*?)\]");
+                        foreach (Match match in matches)
+                        {
+                            delimiters.Add(match.Groups[1].Value); // Add each custom delimiter to the list
+                        }
                     }
                     else
                     {
-                        delimiter = delimiterPart; // Single character delimiter
+                        delimiters.Add(delimiterPart); // Single character delimiter
                     }
 
                     numberStr = input.Substring(delimiterEndIndex + 1); // Get the numbers part
@@ -39,10 +44,9 @@ namespace StringCalculator
 
             // List to store any negative numbers found
             List<int> negativeNumbers = new List<int>();
-            // Replace newline characters with the custom delimiter
-            numberStr = numberStr.Replace("\n", delimiter);
 
-            var numberArr = numberStr.Split(new string[] { delimiter }, StringSplitOptions.None);
+            // Split the input by any of the delimiters
+            var numberArr = numberStr.Split(delimiters.ToArray(), StringSplitOptions.None);
 
             int sum = 0;
 
