@@ -7,13 +7,14 @@ namespace StringCalculator
 {
     public class Calculator
     {
-        public int Add(string input)
+        // Public method to parse the input and return the result and formula
+        public CalculationResult Add(string input)
         {
             if (string.IsNullOrWhiteSpace(input))
-                return 0;
+                return new CalculationResult(0, "0");
 
-            List<string> delimiters = new List<string> { ",", "\n" }; // Default delimiters
             string numberStr = input;
+            List<string> delimiters = new List<string> { ",", "\n" }; // Default delimiters
 
             // Check for custom delimiter
             if (input.StartsWith("//"))
@@ -23,7 +24,7 @@ namespace StringCalculator
                 {
                     string delimiterPart = input.Substring(2, delimiterEndIndex - 2); // Get the custom delimiter part
 
-                    // Check if the delimiter is enclosed in brackets (custom delimiter of any length)
+                    // Check if multiple delimiters are enclosed in brackets
                     if (delimiterPart.StartsWith("[") && delimiterPart.EndsWith("]"))
                     {
                         // Match all delimiters enclosed in brackets
@@ -49,6 +50,7 @@ namespace StringCalculator
             var numberArr = numberStr.Split(delimiters.ToArray(), StringSplitOptions.None);
 
             int sum = 0;
+            List<string> formulaParts = new List<string>(); // Store each part of the formula
 
             foreach (var number in numberArr)
             {
@@ -61,13 +63,20 @@ namespace StringCalculator
                     }
                     else if (result <= 1000)
                     {
-                        // Only add numbers that are 1000 or less
+                        // Add valid number to sum and formula
                         sum += result;
+                        formulaParts.Add(result.ToString());
+                    }
+                    else
+                    {
+                        // Add 0 for ignored values greater than 1000
+                        formulaParts.Add("0");
                     }
                 }
                 else
                 {
-                    sum += 0; // Invalid numbers are treated as 0
+                    // Invalid numbers are treated as 0
+                    formulaParts.Add("0");
                 }
             }
 
@@ -77,7 +86,10 @@ namespace StringCalculator
                 throw new ArgumentException($"Negatives not allowed: {string.Join(", ", negativeNumbers)}");
             }
 
-            return sum;
+            // Build the formula as a string
+            string formula = string.Join("+", formulaParts);
+
+            return new CalculationResult(sum, formula);
         }
     }
 }
